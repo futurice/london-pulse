@@ -1,151 +1,100 @@
 <div class="row">
-  <div class="large-12 columns">
-    <h1>Welcome to Foundation for Sites</h1>
-  </div>
-</div> 
-
-<div class="row">
-  <div class="large-12 columns">
-    <div class="callout">
-      <h3>We&rsquo;re stoked you want to try Foundation! </h3>
-      <p>To get going, this file (index.html) includes some basic styles you can modify, play around with, or totally destroy to get going.</p>
-      <p>Once you've exhausted the fun in this document, you should check out:</p>
-      <div class="row">
-        <div class="large-4 medium-4 columns">
-          <p><a href="http://foundation.zurb.com/docs">Foundation Documentation</a><br />Everything you need to know about using the framework.</p>
-        </div>
-        <div class="large-4 medium-4 columns">
-          <p><a href="http://zurb.com/university/code-skills">Foundation Code Skills</a><br />These online courses offer you a chance to better understand how Foundation works and how you can master it to create awesome projects.</p>
-        </div>
-        <div class="large-4 medium-4 columns">
-          <p><a href="http://foundation.zurb.com/forum">Foundation Forum</a><br />Join the Foundation community to ask a question or show off your knowledge.</p>
-        </div>
-      </div>
-      <div class="row">
-        <div class="large-4 medium-4 medium-push-2 columns">
-          <p><a href="http://github.com/zurb/foundation">Foundation on Github</a><br />Latest code, issue reports, feature requests and more.</p>
-        </div>
-        <div class="large-4 medium-4 medium-pull-2 columns">
-          <p><a href="https://twitter.com/ZURBfoundation">@zurbfoundation</a><br />Ping us on Twitter if you have questions. When you build something with this we'd love to see it (and send you a totally boss sticker).</p>
-        </div>        
-      </div>
+    <div class="large-12 columns text-center">
+        <h1 class="title">London pulse results</h1>
     </div>
-  </div>
+</div>
+<div class="row">
+    <div class="large-8 large-offset-2 columns text-center">
+        <select>
+            <option value="I can rely on my colleagues’ skills and abilities">
+                I can rely on my colleagues’ skills and abilities
+            </option>
+            <option value="I feel I can honestly discuss my tasks, even negative feelings and frustration">
+                I feel I can honestly discuss my tasks, even negative feelings and frustration
+            </option>
+            <option value="I get support from my supervisor when I need it">
+                I get support from my supervisor when I need it
+            </option>
+            <option value="I get support from my colleagues when I need it">
+                I get support from my colleagues when I need it
+            </option>
+            <option value="I think there is enough visibility and information about what is going on in the company">
+                I think there is enough visibility and information about what is going on in the company
+            </option>
+            <option value="I think that we share enough practices between projects and tribes">
+                I think that we share enough practices between projects and tribes
+            </option>
+            <option value="I have challenged myself (tried new things, learned new things, shared my knowledge etc.) recently">
+                I have challenged myself (tried new things, learned new things, shared my knowledge etc.) recently
+            </option>
+            <option value="I feel that Futurice is improving as a great place to work">
+                I feel that Futurice is improving as a great place to work
+            </option>
+            <option value="I feel that my workload is in balance">
+                I feel that my workload is in balance
+            </option>
+            <option value="I think that my current project/work tasks are interesting">
+                I think that my current project/work tasks are interesting
+            </option>
+            <option value="I am proud of being a Futuricean">
+                I am proud of being a Futuricean
+            </option>
+            <option value="I am being fairly rewarded for my work">
+                I am being fairly rewarded for my work
+            </option>
+            <option value="I get enough feedback about my work">
+                I get enough feedback about my work
+            </option>
+            <option value="I feel like I can influence things at work to improve things around me">
+                I feel like I can influence things at work to improve things around me
+            </option>
+            <option value="I feel like I'm very good at my job">
+                I feel like I'm very good at my job
+            </option>
+            <option value="I feel that I have possibilities to improve my professional skills in my work">
+                I feel that I have possibilities to improve my professional skills in my work
+            </option>
+            <option value="We have a strong sense of togetherness at Futurice">We have a strong sense of togetherness at Futurice
+            </option>
+            <option value="We have a strong sense of togetherness in my tribe">We have a strong sense of togetherness in my tribe
+            </option>
+            <option value="I see interesting career development possibilities ahead of me at Futurice">
+                I see interesting career development possibilities ahead of me at Futurice
+            </option>
+            <option value="I enjoy working at Futurice">
+                I enjoy working at Futurice
+            </option>
+            <option value="I would recommend Futurice as an employer if my friend would ask">
+                I would recommend Futurice as an employer if my friend would ask
+            </option>
+            <option value="I see no reason to look for another job at the moment">
+                I see no reason to look for another job at the moment
+            </option>
+            <option value="I feel that employees' feedback is taken into account well at Futurice">
+                I feel that employees' feedback is taken into account well at Futurice
+            </option>
+            <option value="I do have enough visibility and information about what is going on in the company">I do have enough visibility and information about what is going on in the company
+            </option>
+        </select>
+    </div>
+</div>
+
+<div class="row expanded averages-graph">
+    <div class="row">
+        <div class="large-12 columns">
+            Graph goes here
+        </div>
+    </div>
 </div>
 
 <div class="row">
-  <div class="large-8 medium-8 columns">
-    <h5>Here&rsquo;s your basic grid:</h5>
-    <!-- Grid Example -->
-
-    <div class="row">
-      <div class="large-12 columns">
-        <div class="primary callout">
-          <p><strong>This is a twelve column section in a row.</strong> Each of these includes a div.callout element so you can see where the columns are - it's not required at all for the grid.</p>
-        </div>
-      </div>
+    <div class="large-4 columns">
+        <canvas id="january" class="graph"></canvas>
     </div>
-    <div class="row">
-      <div class="large-6 medium-6 columns">
-        <div class="primary callout">
-          <p>Six columns</p>
-        </div>
-      </div>
-      <div class="large-6 medium-6 columns">
-        <div class="primary callout">
-          <p>Six columns</p>
-        </div>
-      </div>
+    <div class="large-4 columns">
+        <canvas id="february" class="graph"></canvas>
     </div>
-    <div class="row">
-      <div class="large-4 medium-4 small-4 columns">
-        <div class="primary callout">
-          <p>Four columns</p>
-        </div>
-      </div>
-      <div class="large-4 medium-4 small-4 columns">
-        <div class="primary callout">
-          <p>Four columns</p>
-        </div>
-      </div>
-      <div class="large-4 medium-4 small-4 columns">
-        <div class="primary callout">
-          <p>Four columns</p>
-        </div>
-      </div>
+    <div class="large-4 columns">
+        <canvas id="februart" class="graph"></canvas>
     </div>
-    
-    <hr />
-            
-    <h5>We bet you&rsquo;ll need a form somewhere:</h5>
-    <form>
-      <div class="row">
-        <div class="large-12 columns">
-          <label>Input Label</label>
-          <input type="text" placeholder="large-12.columns" />
-        </div>
-      </div>
-      <div class="row">
-        <div class="large-4 medium-4 columns">
-          <label>Input Label</label>
-          <input type="text" placeholder="large-4.columns" />
-        </div>
-        <div class="large-4 medium-4 columns">
-          <label>Input Label</label>
-          <input type="text" placeholder="large-4.columns" />
-        </div>
-        <div class="large-4 medium-4 columns">
-          <div class="row collapse">
-            <label>Input Label</label>
-            <div class="input-group">
-              <input class="input-group-field" type="text" placeholder="input-group" />
-              <span class="input-group-label">.com</span>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="large-12 columns">
-          <label>Select Box</label>
-          <select>
-            <option value="husker">Husker</option>
-            <option value="starbuck">Starbuck</option>
-            <option value="hotdog">Hot Dog</option>
-            <option value="apollo">Apollo</option>
-          </select>
-        </div>
-      </div>
-      <div class="row">
-        <div class="large-6 medium-6 columns">
-          <label>Choose Your Favorite</label>
-          <input type="radio" name="pokemon" value="Red" id="pokemonRed"><label for="pokemonRed">Radio 1</label>
-          <input type="radio" name="pokemon" value="Blue" id="pokemonBlue"><label for="pokemonBlue">Radio 2</label>
-        </div>
-        <div class="large-6 medium-6 columns">
-          <label>Check these out</label>
-          <input id="checkbox1" type="checkbox"><label for="checkbox1">Checkbox 1</label>
-          <input id="checkbox2" type="checkbox"><label for="checkbox2">Checkbox 2</label>
-        </div>
-      </div>
-      <div class="row">
-        <div class="large-12 columns">
-          <label>Textarea Label</label>
-          <textarea placeholder="small-12.columns"></textarea>
-        </div>
-      </div>
-    </form>
-  </div>     
-
-  <div class="large-4 medium-4 columns">
-    <h5>Try one of these buttons:</h5>
-    <p><a href="#" class="small button">Simple Button</a><br/>          
-    <a href="#" class="medium success button">Success Btn</a><br/>
-    <a href="#" class="medium alert button">Alert Btn</a><br/>
-    <a href="#" class="medium secondary button">Secondary Btn</a></p>           
-    <div class="callout">
-      <h5>So many components, girl!</h5>
-      <p>A whole kitchen sink of goodies comes with Foundation. Check out the docs to see them all, along with details on making them your own.</p>
-      <a href="http://foundation.zurb.com/docs/" class="small button">Go to Foundation Docs</a>          
-    </div>
-  </div>
 </div>
