@@ -1,0 +1,46 @@
+/* Futurice Colours */
+$green      : #45AD47;
+$red        : #EA5346;
+$purple     : #4A2158;
+$orange     : #F08029;
+$yellow     : #FDED4D;
+$dark-green : #145358;
+$brown      : #73625F;
+
+/* additional colours */
+$blue       : #36A2EB;
+$leaf-green : #005A4B;
+$pink       : #FB64B3;
+$charcoal   : #262435;
+
+
+/* Over-ride Foundation base palette */
+
+// Greys
+$light-gray : #E7E9ED;
+$medium-gray: #E3E4E5;
+$dark-gray  : #8A8A8A;
+$black      : #000;
+$white      : #fff;
+
+$foundation-palette: (
+  primary: $green,
+  secondary: $dark-gray,
+  success: #3adb76,
+  warning: $orange,
+  alert: $red,
+);
+
+
+/* Tribes */
+$tribe-south      : $purple;
+$tribe-vesa       : $yellow;
+$tribe-inna       : $dark-green;
+$tribe-avalon     : $pink;
+$tribe-london     : $red;
+$tribe-berlin     : $orange;
+$tribe-tammerforce: $brown;
+$tribe-four       : $charcoal;
+$tribe-munich     : $leaf-green;
+$tribe-stockholm  : $blue;
+
