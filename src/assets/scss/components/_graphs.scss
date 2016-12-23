@@ -1,10 +1,24 @@
 .averages-graph {
     background-color: $light-gray;
-    padding: 2rem;
+    padding-top: 2rem;
 }
 
 .graph {
-    // max-height: 300px;
-    min-height: 300px;
+    width: 100%;
+    height: 300px;
     margin: 0 auto;
 }
+
+.highcharts-background {
+    fill: transparent;
+}
+
+.highcharts-root,
+.highcharts-background {
+    height: 300px;
+}
+.highcharts-legend-item,
+.highcharts-credits {
+    display: none
+}
+
