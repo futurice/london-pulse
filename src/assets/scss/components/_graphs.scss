@@ -1,9 +1,10 @@
 .averages-graph {
     background-color: $light-gray;
-    min-height: 400px;
+    padding: 2rem;
 }
 
 .graph {
-    width: 100%;
-    min-height: 400px;
+    // max-height: 300px;
+    min-height: 300px;
+    margin: 0 auto;
 }
