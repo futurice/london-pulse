@@ -4,7 +4,9 @@ $(document).ready(function() {
         $('#response-container').highcharts({
             chart: {
                 type: 'area',
-                height: 320,
+                height: 340,
+                spacingBottom: 30,
+                spacingTop: 30,
             },
             data: {
                 csv: csv
