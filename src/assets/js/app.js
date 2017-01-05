@@ -1,18 +1,26 @@
 $(document).foundation();
+var url = 'assets/data/responses.csv';
+
+function getData() {
+    return $.get(url).then(function(results){
+        return results;
+    });
+};
+
 $(document).ready(function() {
-    $.get('assets/data/responses.csv', function(csv) {
+    getData().then(function(results){
         $('#response-container').highcharts({
             chart: {
-                type: 'area',
+                type: 'column',
                 height: 340,
                 spacingBottom: 30,
                 spacingTop: 30,
             },
             data: {
-                csv: csv
+                csv: results
             },
             title: {
-                text: 'Number of responses'
+                text: 'Average'
             },
             yAxis: {
                 title: {
@@ -20,6 +28,5 @@ $(document).ready(function() {
                 }
             }
         });
-    });
+    })
 });
-
