@@ -43,34 +43,16 @@ const questionsPromise = dataPromise.then(function(data) {
 })
 
 $(document).ready(function() {
-    questionsPromise.then(function(questions) {
-        const $questionSelect = $("#question-select");
-        questions.forEach(function(question) {
-            $questionSelect.append(`<option value="${question}">${question}</option>`);
-        })
+    const $questionSelect = $("#question-select");
+
+    $questionSelect.on("change", function() {
+        $questionSelect.val();
     });
 
-
-    getData().then(function(results){
-        $('#response-container').highcharts({
-            chart: {
-                type: 'column',
-                height: 340,
-                spacingBottom: 30,
-                spacingTop: 30,
-            },
-            // we'll use series instead of data.
-            data: {
-                csv: results
-            },
-            title: {
-                text: 'Average'
-            },
-            yAxis: {
-                title: {
-                    text: 'Number'
-                }
-            }
+    questionsPromise.then(function(questions) {
+        questions.forEach(function(question) {
+            $questionSelect.append(`<option value="${question}">${question}</option>`);
         });
-    })
+        $questionSelect.trigger("change");
+    });
 });
