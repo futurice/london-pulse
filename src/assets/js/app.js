@@ -7,14 +7,16 @@ const dataFiles = [
     "assets/data/pulse_data.csv",
     "assets/data/answers_september.csv",
     "assets/data/answers_october.csv",
-    "assets/data/answers_november.csv"
+    "assets/data/answers_november.csv",
+    "assets/data/answers_december.csv"
 ];
 
 function loadCSV(url) {
     return $.get(url).then(function(data){
         return Papa.parse(data, {
             header: true,
-            dynamicTyping: true
+            dynamicTyping: true,
+            skipEmptyLines: true
         });
     });
 };
@@ -42,8 +44,17 @@ const questionsPromise = dataPromise.then(function(data) {
     return Array.from(uniqueQuestions).sort();
 })
 
+const monthsPromise = dataPromise.then(function(data) {
+    const allMonths = data.map(function(row) {
+        return row[MONTH_FIELD];
+    });
+    const uniqueMonths = new Set(allMonths);
+    return Array.from(uniqueMonths);
+});
+
 $(document).ready(function() {
     const $questionSelect = $("#question-select");
+    const $monthlyGraphs = $("#monthly-graphs");
 
     $questionSelect.on("change", function() {
         $questionSelect.val();
@@ -54,5 +65,15 @@ $(document).ready(function() {
             $questionSelect.append(`<option value="${question}">${question}</option>`);
         });
         $questionSelect.trigger("change");
+    });
+
+    //Create monthly graphs container
+    monthsPromise.then(function(months) {
+        months.map(function(month) {
+            $monthlyGraphs.append(`
+                <div class="large-3 columns">
+                    <div class="month-graph" data-month="${month}"></div>
+                </div>`);
+        })
     });
 });
