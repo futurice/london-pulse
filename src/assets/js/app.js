@@ -2,6 +2,14 @@ $(document).foundation();
 
 const MONTH_FIELD = "Month";
 const TRIBE_FIELD = "My tribe";
+const MY_TRIBE = "London"
+const VALUE_TO_DISPLAY_NAME = new Map ([
+    ["", "Abstain"],
+    [1, "Strongly disagree"],
+    [2, "Disagree"],
+    [3, "Agree"],
+    [4, "Strongly agree"]
+]);
 
 const dataFiles = [
     "assets/data/pulse_data.csv",
@@ -31,6 +39,12 @@ const dataPromise = Promise.all(
     });
 });
 
+const londonDataPromise = dataPromise.then(function(data) {
+    return data.filter(function (row) {
+        return row[TRIBE_FIELD] === MY_TRIBE;
+    });
+});
+
 const questionsPromise = dataPromise.then(function(data) {
     const allQuestions = data.map(function(row) {
         return Object.keys(row);
@@ -52,12 +66,57 @@ const monthsPromise = dataPromise.then(function(data) {
     return Array.from(uniqueMonths);
 });
 
+function drawAverageChart(currentQuestion) {
+    // body...
+}
+
+function drawMonthCharts(currentQuestion) {
+    londonDataPromise.then(function(tribeData) {
+        monthsPromise.then(function(months) {
+            months.map(function(month) {
+                drawMonthChart(currentQuestion, tribeData, month);
+            });
+        });
+    });
+}
+
+function drawMonthChart(currentQuestion, tribeData, month){
+    const valueCounter = new Map();
+    for (let [key, value] of VALUE_TO_DISPLAY_NAME) {
+        valueCounter.set(key, 0);
+    };
+
+    tribeData.filter(function(row) {
+        return row[MONTH_FIELD] === month;
+    }).map(function(row) {
+        const key = row[currentQuestion];
+        valueCounter.set(key, valueCounter.get(key) + 1);
+    });
+
+    $(`.month-graph[data-month="${month}"]`).highcharts({
+        chart: {
+            type: 'column'
+        },
+        xAxis: {
+            categories: Array.from(VALUE_TO_DISPLAY_NAME.values())
+        },
+        series: [{
+            data: Array.from(valueCounter.values())
+        }]
+    });
+};
+
+function drawCharts(currentQuestion) {
+    drawAverageChart(currentQuestion);
+    drawMonthCharts(currentQuestion);
+};
+
 $(document).ready(function() {
     const $questionSelect = $("#question-select");
     const $monthlyGraphs = $("#monthly-graphs");
 
     $questionSelect.on("change", function() {
-        $questionSelect.val();
+        drawCharts($questionSelect.val());
     });
 
     questionsPromise.then(function(questions) {
