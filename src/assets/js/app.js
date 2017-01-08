@@ -36,6 +36,12 @@ const dataPromise = Promise.all(
         return result.data;
     }).reduce(function(a,b) {
         return a.concat(b);
+    }).filter(function (row) {
+        return (
+            row[TRIBE_FIELD] !== "Others" &&
+            row[TRIBE_FIELD] !== "Employees whose supervisor is Teemu Moisala" &&
+            row[TRIBE_FIELD] !== "Employees whose supervisor is Tuomas Syrjänen"
+        );
     });
 });
 
@@ -66,9 +72,90 @@ const monthsPromise = dataPromise.then(function(data) {
     return Array.from(uniqueMonths);
 });
 
+const tribesPromise = dataPromise.then(function(data) {
+    const allTribes = data.map(function(row) {
+        return row[TRIBE_FIELD];
+    });
+    const uniqueTribes = new Set(allTribes);
+    return Array.from(allTribes).sort(function(a, b) {
+        if (a === "London") {  /* Always put London first */
+            return -1;
+        } else if (b === "London"){
+            return 1;
+        } else if (a < b) {
+            return -1;
+        } else if (a > b) {
+            return 1;
+        }
+        return 0;
+    });
+});
+
+
 function drawAverageChart(currentQuestion) {
-    // body...
+    Promise.all([monthsPromise, tribesPromise, dataPromise]).then(function([months, tribes, data]) {
+        const allResponses = new Map();
+
+        tribes.forEach(function(tribe) {
+            const tribeResponses = new Map();
+            months.forEach(function (month) {
+                tribeResponses.set(month, []);
+            });
+            allResponses.set(tribe, tribeResponses);
+        });
+
+        //step 2: fill.
+        data.forEach(function (row) {
+            const tribeResponses = allResponses.get(row[TRIBE_FIELD]);
+            const monthReponses = tribeResponses.get(row[MONTH_FIELD]);
+            if (row[currentQuestion] !== "") {
+                monthReponses.push(row[currentQuestion]);
+            }
+        });
+
+        //step 3: calculate averages
+        allResponses.forEach(function (tribeResponses, tribe) {
+            tribeResponses.forEach(function (monthReponses, month) {
+                const avg = calculateAverage(monthReponses);
+                tribeResponses.set(month, avg);
+            });
+        })
+
+        //step 4: create series
+        const series = [];
+        allResponses.forEach(function (tribeResponses, tribe) {
+            const seriesEntry = {
+                name: tribe,
+                data: Array.from(tribeResponses.values())
+            };
+            series.push(seriesEntry);
+        });
+
+        //Draw
+        $("#average-graph-container").highcharts({
+            chart: {
+                type: 'column'
+            },
+            xAxis: {
+                categories: months
+            },
+            series
+        });
+
+    });
 }
+
+function calculateAverage(array){
+    if(array.length > 0){
+        const sum = array.reduce(function(a, b) {
+          return a + b;
+        }, 0);
+        return sum/array.length;
+    } else {
+        return 0;
+    }
+}
+
 
 function drawMonthCharts(currentQuestion) {
     londonDataPromise.then(function(tribeData) {
