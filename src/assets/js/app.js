@@ -208,7 +208,8 @@ function drawMonthChart(currentQuestion, tribeData, month){
             text: null
         },
         subtitle: {
-            text: month
+            text: month,
+            x: 20
         }
     });
 };
