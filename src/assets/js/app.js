@@ -170,6 +170,7 @@ function drawMonthCharts(currentQuestion) {
             });
         });
     });
+    $('#question-subtitle').html(`${currentQuestion}`);
 }
 
 function drawMonthChart(currentQuestion, tribeData, month){
