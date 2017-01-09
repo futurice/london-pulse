@@ -1,18 +1,14 @@
-/* Futurice Colours */
-$green      : #45AD47;
-$red        : #EA5346;
-$purple     : #4A2158;
-$orange     : #F08029;
-$yellow     : #FDED4D;
-$dark-green : #145358;
-$brown      : #73625F;
-
-/* additional colours */
-$blue       : #36A2EB;
-$leaf-green : #005A4B;
-$pink       : #FB64B3;
-$charcoal   : #262435;
-
+/* Chart Colours */
+$red         : #ED524A;
+$cement      : #AFAFAF;
+$green       : #8CD674;
+$blue        : #579AD6;
+$light-orange: #FCA853;
+$purple      : #9F65AD;
+$brown       : #A41B1B;
+$turquoise   : #4A9FA6;
+$orange      : #F46508;
+$yellow      : #FDED4D;
 
 /* Over-ride Foundation base palette */
 
@@ -33,14 +29,15 @@ $foundation-palette: (
 
 
 /* Tribes */
-$tribe-south      : $purple;
-$tribe-vesa       : $yellow;
-$tribe-inna       : $dark-green;
-$tribe-avalon     : $pink;
 $tribe-london     : $red;
-$tribe-berlin     : $orange;
+$tribe-avalon     : lighten($cement, 20%);
+$tribe-berlin     : $green;
+$tribe-four       : $blue;
+$tribe-inna       : $light-orange;
+$tribe-munich     : $purple;
 $tribe-tammerforce: $brown;
-$tribe-four       : $charcoal;
-$tribe-munich     : $leaf-green;
-$tribe-stockholm  : $blue;
+$tribe-south      : $turquoise;
+$tribe-stockholm  : $orange;
+$tribe-vesa       : $yellow;
+
 

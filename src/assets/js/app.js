@@ -5,10 +5,10 @@ const TRIBE_FIELD = "My tribe";
 const MY_TRIBE = "London"
 const VALUE_TO_DISPLAY_NAME = new Map ([
     ["", "Abstain"],
-    [1, "Strongly disagree"],
+    [1, "Str disagree"],
     [2, "Disagree"],
     [3, "Agree"],
-    [4, "Strongly agree"]
+    [4, "Str agree"]
 ]);
 
 const dataFiles = [
@@ -136,6 +136,11 @@ function drawAverageChart(currentQuestion) {
             chart: {
                 type: 'column'
             },
+            title: {
+                text: "Monthly average"
+            },
+            spacingBottom: 30,
+            marginTop: 30,
             xAxis: {
                 categories: months
             },
@@ -187,9 +192,23 @@ function drawMonthChart(currentQuestion, tribeData, month){
         xAxis: {
             categories: Array.from(VALUE_TO_DISPLAY_NAME.values())
         },
+        yAxis: {
+            title: {
+                text: "# responses"
+            }
+        },
         series: [{
             data: Array.from(valueCounter.values())
-        }]
+        }],
+        legend: {
+            enabled: false
+        },
+        title: {
+            text: null
+        },
+        subtitle: {
+            text: month
+        }
     });
 };
 
