@@ -217,19 +217,34 @@ function drawMonthChart(currentQuestion, tribeData, month){
 function drawCharts(currentQuestion) {
     drawAverageChart(currentQuestion);
     drawMonthCharts(currentQuestion);
+    if(currentQuestion === "All questions") {
+        $("#monthly-graphs").hide();
+        $(".averages-graph").hide();
+        $("#question-graphs").show();
+    } else {
+        $("#question-graphs").hide();
+        $("#monthly-graphs").show();
+        $(".averages-graph").show();
+    }
 };
 
 $(document).ready(function() {
     const $questionSelect = $("#question-select");
     const $monthlyGraphs = $("#monthly-graphs");
+    const $questionGraphs = $("#question-graphs");
 
     $questionSelect.on("change", function() {
+        console.log("ping");
         drawCharts($questionSelect.val());
     });
 
     questionsPromise.then(function(questions) {
         questions.forEach(function(question) {
             $questionSelect.append(`<option value="${question}">${question}</option>`);
+            $questionGraphs.append(`
+                <div class="large-3 columns">
+                    <div class="month-graph"></div>
+                </div>`);
         });
         $questionSelect.trigger("change");
     });
