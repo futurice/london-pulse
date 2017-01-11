@@ -215,7 +215,11 @@ function drawMonthChart(currentQuestion, tribeData, month){
 
 
 function drawTribeQuestionCharts(currentQuestion) {
-    drawTribeQuestionChart("I am proud of being a Futuricean");
+    questionsPromise.then(function(questions) {
+        questions.forEach(function(question) {
+            drawTribeQuestionChart(question);
+        });
+    });
 }
 
 function drawTribeQuestionChart(currentQuestion) {
@@ -234,10 +238,12 @@ function drawTribeQuestionChart(currentQuestion) {
 
         // Fill
         data.forEach(function (row) {
-            const valueLabel = VALUE_TO_DISPLAY_NAME.get(row[currentQuestion]);
-            const monthName = row[MONTH_FIELD]
-            const n = allResponses.get(valueLabel).get(monthName);
-            allResponses.get(valueLabel).set(monthName, n+1);
+            if(currentQuestion in row){
+                const monthName = row[MONTH_FIELD]
+                const valueLabel = VALUE_TO_DISPLAY_NAME.get(row[currentQuestion]);
+                const n = allResponses.get(valueLabel).get(monthName);
+                allResponses.get(valueLabel).set(monthName, n+1);
+            }
         });
 
         //convert to series for highcharts
