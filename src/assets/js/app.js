@@ -93,7 +93,11 @@ const tribesPromise = dataPromise.then(function(data) {
 
 
 function drawAverageChart(currentQuestion) {
-    Promise.all([monthsPromise, tribesPromise, dataPromise]).then(function([months, tribes, data]) {
+    Promise.all([
+        monthsPromise,
+        tribesPromise,
+        dataPromise
+    ]).then(function([months, tribes, data]) {
         const allResponses = new Map();
 
         tribes.forEach(function(tribe) {
@@ -162,11 +166,12 @@ function calculateAverage(array){
 
 
 function drawMonthCharts(currentQuestion) {
-    londonDataPromise.then(function(tribeData) {
-        monthsPromise.then(function(months) {
-            months.map(function(month) {
-                drawMonthChart(currentQuestion, tribeData, month);
-            });
+    Promise.all([
+        londonDataPromise,
+        monthsPromise
+    ]).then(function([tribeData, months]) {
+        months.forEach(function(month) {
+            drawMonthChart(currentQuestion, tribeData, month);
         });
     });
     $("#question-subtitle").html(`${currentQuestion}`);
@@ -174,9 +179,9 @@ function drawMonthCharts(currentQuestion) {
 
 function drawMonthChart(currentQuestion, tribeData, month){
     const valueCounter = new Map();
-    for (let [key, value] of VALUE_TO_DISPLAY_NAME) {
+    VALUE_TO_DISPLAY_NAME.forEach(function(value, key) {
         valueCounter.set(key, 0);
-    };
+    });
 
     tribeData.filter(function(row) {
         return row[MONTH_FIELD] === month;
@@ -223,11 +228,12 @@ function drawTribeQuestionCharts(currentQuestion) {
 }
 
 function drawTribeQuestionChart(currentQuestion) {
-
-    Promise.all([monthsPromise, londonDataPromise]).then(function([months, data]) {
+    Promise.all([
+        monthsPromise,
+        londonDataPromise
+    ]).then(function([months, data]) {
         //Create empty map of map
         const allResponses = new Map();
-
         VALUE_TO_DISPLAY_NAME.forEach(function(value) {
             const valueResponses = new Map();
             months.forEach(function(month) {
@@ -238,12 +244,13 @@ function drawTribeQuestionChart(currentQuestion) {
 
         // Fill
         data.forEach(function (row) {
-            if(currentQuestion in row){
-                const monthName = row[MONTH_FIELD]
-                const valueLabel = VALUE_TO_DISPLAY_NAME.get(row[currentQuestion]);
-                const n = allResponses.get(valueLabel).get(monthName);
-                allResponses.get(valueLabel).set(monthName, n+1);
+            if(!(currentQuestion in row)) {
+                return;
             }
+            const monthName = row[MONTH_FIELD]
+            const valueLabel = VALUE_TO_DISPLAY_NAME.get(row[currentQuestion]);
+            const n = allResponses.get(valueLabel).get(monthName);
+            allResponses.get(valueLabel).set(monthName, n+1);
         });
 
         //convert to series for highcharts
