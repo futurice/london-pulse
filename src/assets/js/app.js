@@ -134,7 +134,7 @@ function drawAverageChart(currentQuestion) {
         //Draw
         $("#average-graph-container").highcharts({
             chart: {
-                type: 'column'
+                type: "column"
             },
             title: {
                 text: "Monthly average"
@@ -146,7 +146,6 @@ function drawAverageChart(currentQuestion) {
             },
             series
         });
-
     });
 }
 
@@ -170,7 +169,7 @@ function drawMonthCharts(currentQuestion) {
             });
         });
     });
-    $('#question-subtitle').html(`${currentQuestion}`);
+    $("#question-subtitle").html(`${currentQuestion}`);
 }
 
 function drawMonthChart(currentQuestion, tribeData, month){
@@ -188,7 +187,7 @@ function drawMonthChart(currentQuestion, tribeData, month){
 
     $(`.month-graph[data-month="${month}"]`).highcharts({
         chart: {
-            type: 'column'
+            type: "column"
         },
         xAxis: {
             categories: Array.from(VALUE_TO_DISPLAY_NAME.values())
@@ -214,17 +213,87 @@ function drawMonthChart(currentQuestion, tribeData, month){
     });
 };
 
+
+function drawTribeQuestionCharts(currentQuestion) {
+    drawTribeQuestionChart("I am proud of being a Futuricean");
+}
+
+function drawTribeQuestionChart(currentQuestion) {
+
+    Promise.all([monthsPromise, londonDataPromise]).then(function([months, data]) {
+        //Create empty map of map
+        const allResponses = new Map();
+
+        VALUE_TO_DISPLAY_NAME.forEach(function(value) {
+            const valueResponses = new Map();
+            months.forEach(function(month) {
+                valueResponses.set(month, 0);
+            });
+            allResponses.set(value, valueResponses);
+        });
+
+        // Fill
+        data.forEach(function (row) {
+            const valueLabel = VALUE_TO_DISPLAY_NAME.get(row[currentQuestion]);
+            const monthName = row[MONTH_FIELD]
+            const n = allResponses.get(valueLabel).get(monthName);
+            allResponses.get(valueLabel).set(monthName, n+1);
+        });
+
+        //convert to series for highcharts
+        const series = [];
+        allResponses.forEach(function (valueResponses, valueLabel) {
+            const seriesEntry = {
+                name: valueLabel,
+                data: Array.from(valueResponses.values())
+            };
+            series.push(seriesEntry);
+        });
+
+        //Draw
+        $(`.question-graph[data-question="${currentQuestion}"]`).highcharts({
+            chart: {
+                type: "column"
+            },
+            title: {
+                text: null
+            },
+            subtitle: {
+                text: currentQuestion
+            },
+            spacingBottom: 30,
+            marginTop: 30,
+            xAxis: {
+                categories: months
+            },
+            yAxis: {
+                title: null
+            },
+            series,
+            plotOptions: {
+                column: {
+                    stacking: "normal",
+                }
+            },
+            legend: {
+                enabled: false
+            }
+        });
+    });
+}
+
 function drawCharts(currentQuestion) {
-    drawAverageChart(currentQuestion);
-    drawMonthCharts(currentQuestion);
     if(currentQuestion === "All questions") {
         $("#monthly-graphs").hide();
         $(".averages-graph").hide();
         $("#question-graphs").show();
+        drawTribeQuestionCharts(currentQuestion);
     } else {
         $("#question-graphs").hide();
         $("#monthly-graphs").show();
         $(".averages-graph").show();
+        drawAverageChart(currentQuestion);
+        drawMonthCharts(currentQuestion);
     }
 };
 
@@ -234,7 +303,6 @@ $(document).ready(function() {
     const $questionGraphs = $("#question-graphs");
 
     $questionSelect.on("change", function() {
-        console.log("ping");
         drawCharts($questionSelect.val());
     });
 
@@ -242,8 +310,8 @@ $(document).ready(function() {
         questions.forEach(function(question) {
             $questionSelect.append(`<option value="${question}">${question}</option>`);
             $questionGraphs.append(`
-                <div class="large-3 columns">
-                    <div class="month-graph"></div>
+                <div class="large-4 columns">
+                    <div class="question-graph" data-question="${question}"></div>
                 </div>`);
         });
         $questionSelect.trigger("change");
