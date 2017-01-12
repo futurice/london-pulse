@@ -45,11 +45,13 @@ const dataPromise = Promise.all(
     )
 );
 
-const londonDataPromise = dataPromise.then(
-    data => data.filter(
-        row => (row[TRIBE_FIELD] === MY_TRIBE)
-    )
-);
+function getTribeDataPromise(tribe) {
+    return dataPromise.then(
+        data => data.filter(
+            row => (row[TRIBE_FIELD] === tribe)
+        )
+    );
+}
 
 const questionsPromise = dataPromise.then(data => {
     const allQuestions = data.map(
@@ -78,9 +80,9 @@ const tribesPromise = dataPromise.then(data => {
     );
     const uniqueTribes = new Set(allTribes);
     return Array.from(allTribes).sort(function(a, b) {
-        if (a === "London") {  /* Always put London first */
+        if (a === MY_TRIBE) {  /* Always put MY_TRIBE first */
             return -1;
-        } else if (b === "London"){
+        } else if (b === MY_TRIBE){
             return 1;
         } else if (a < b) {
             return -1;
@@ -164,7 +166,7 @@ function calculateAverage(array){
 
 function drawMonthCharts(currentQuestion) {
     Promise.all([
-        londonDataPromise,
+        getTribeDataPromise(MY_TRIBE),
         monthsPromise
     ]).then(([tribeData, months]) => {
         months.forEach(month => drawMonthChart(currentQuestion, tribeData, month));
@@ -225,7 +227,7 @@ function drawTribeQuestionCharts(currentQuestion) {
 function drawTribeQuestionChart(currentQuestion) {
     Promise.all([
         monthsPromise,
-        londonDataPromise
+        getTribeDataPromise(MY_TRIBE)
     ]).then(([months, data]) => {
         //Create empty map of map
         const allResponses = new Map();
