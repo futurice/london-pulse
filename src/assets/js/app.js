@@ -42,7 +42,7 @@ const dataPromise = Promise.all(
             row[TRIBE_FIELD] !== "Employees whose supervisor is Teemu Moisala" &&
             row[TRIBE_FIELD] !== "Employees whose supervisor is Tuomas Syrjänen"
         )
-    );
+    )
 );
 
 const londonDataPromise = dataPromise.then(
@@ -175,7 +175,7 @@ function drawMonthCharts(currentQuestion) {
 function drawMonthChart(currentQuestion, tribeData, month){
     const valueCounter = new Map();
     VALUE_TO_DISPLAY_NAME.forEach(
-        (value, key) => valueCounter.set(key, 0);
+        (value, key) => valueCounter.set(key, 0)
     );
 
     tribeData.filter(
@@ -217,7 +217,7 @@ function drawMonthChart(currentQuestion, tribeData, month){
 function drawTribeQuestionCharts(currentQuestion) {
     questionsPromise.then(
         questions => questions.forEach(
-            question => drawTribeQuestionChart(question);
+            question => drawTribeQuestionChart(question)
         )
     );
 }
