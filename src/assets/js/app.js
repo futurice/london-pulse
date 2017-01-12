@@ -20,43 +20,43 @@ const dataFiles = [
 ];
 
 function loadCSV(url) {
-    return $.get(url).then(function(data){
-        return Papa.parse(data, {
+    return $.get(url).then(
+        data => Papa.parse(data, {
             header: true,
             dynamicTyping: true,
             skipEmptyLines: true
-        });
-    });
+        })
+    );
 };
 
 const dataPromise = Promise.all(
     dataFiles.map(loadCSV)
-).then(function(results){
-    return results.map(function(result) {
-        return result.data;
-    }).reduce(function(a,b) {
-        return a.concat(b);
-    }).filter(function (row) {
-        return (
+).then(
+    results => results.map(
+        result => result.data
+    ).reduce(
+        (a,b) => a.concat(b)
+    ).filter(
+        row => (
             row[TRIBE_FIELD] !== "Others" &&
             row[TRIBE_FIELD] !== "Employees whose supervisor is Teemu Moisala" &&
             row[TRIBE_FIELD] !== "Employees whose supervisor is Tuomas Syrjänen"
-        );
-    });
-});
+        )
+    );
+);
 
-const londonDataPromise = dataPromise.then(function(data) {
-    return data.filter(function (row) {
-        return row[TRIBE_FIELD] === MY_TRIBE;
-    });
-});
+const londonDataPromise = dataPromise.then(
+    data => data.filter(
+        row => (row[TRIBE_FIELD] === MY_TRIBE)
+    )
+);
 
-const questionsPromise = dataPromise.then(function(data) {
-    const allQuestions = data.map(function(row) {
-        return Object.keys(row);
-    }).reduce(function(a,b) {
-        return a.concat(b); //flatten
-    });
+const questionsPromise = dataPromise.then(data => {
+    const allQuestions = data.map(
+        row => Object.keys(row)
+    ).reduce(
+        (a,b) => a.concat(b) //flatten
+    );
     const uniqueQuestions = new Set(allQuestions);
     uniqueQuestions.delete(MONTH_FIELD);
     uniqueQuestions.delete(TRIBE_FIELD);
@@ -64,18 +64,18 @@ const questionsPromise = dataPromise.then(function(data) {
     return Array.from(uniqueQuestions).sort();
 })
 
-const monthsPromise = dataPromise.then(function(data) {
-    const allMonths = data.map(function(row) {
-        return row[MONTH_FIELD];
-    });
+const monthsPromise = dataPromise.then(data => {
+    const allMonths = data.map(
+        row => row[MONTH_FIELD]
+    );
     const uniqueMonths = new Set(allMonths);
     return Array.from(uniqueMonths);
 });
 
-const tribesPromise = dataPromise.then(function(data) {
-    const allTribes = data.map(function(row) {
-        return row[TRIBE_FIELD];
-    });
+const tribesPromise = dataPromise.then(data => {
+    const allTribes = data.map(
+        row => row[TRIBE_FIELD]
+    );
     const uniqueTribes = new Set(allTribes);
     return Array.from(allTribes).sort(function(a, b) {
         if (a === "London") {  /* Always put London first */
@@ -97,19 +97,19 @@ function drawAverageChart(currentQuestion) {
         monthsPromise,
         tribesPromise,
         dataPromise
-    ]).then(function([months, tribes, data]) {
+    ]).then(([months, tribes, data]) => {
         const allResponses = new Map();
 
         tribes.forEach(function(tribe) {
             const tribeResponses = new Map();
-            months.forEach(function (month) {
-                tribeResponses.set(month, []);
-            });
+            months.forEach(
+                month => tribeResponses.set(month, [])
+            );
             allResponses.set(tribe, tribeResponses);
         });
 
         //step 2: fill.
-        data.forEach(function (row) {
+        data.forEach(row => {
             const tribeResponses = allResponses.get(row[TRIBE_FIELD]);
             const monthReponses = tribeResponses.get(row[MONTH_FIELD]);
             if (row[currentQuestion] !== "") {
@@ -118,8 +118,8 @@ function drawAverageChart(currentQuestion) {
         });
 
         //step 3: calculate averages
-        allResponses.forEach(function (tribeResponses, tribe) {
-            tribeResponses.forEach(function (monthReponses, month) {
+        allResponses.forEach((tribeResponses, tribe) => {
+            tribeResponses.forEach((monthReponses, month) => {
                 const avg = calculateAverage(monthReponses);
                 tribeResponses.set(month, avg);
             });
@@ -127,7 +127,7 @@ function drawAverageChart(currentQuestion) {
 
         //step 4: create series
         const series = [];
-        allResponses.forEach(function (tribeResponses, tribe) {
+        allResponses.forEach( (tribeResponses, tribe) => {
             const seriesEntry = {
                 name: tribe,
                 data: Array.from(tribeResponses.values())
@@ -154,14 +154,11 @@ function drawAverageChart(currentQuestion) {
 }
 
 function calculateAverage(array){
-    if(array.length > 0){
-        const sum = array.reduce(function(a, b) {
-          return a + b;
-        }, 0);
-        return sum/array.length;
-    } else {
+    if (array.length === 0) {
         return 0;
     }
+    const sum = array.reduce((a, b) => a + b, 0);
+    return sum / array.length;
 }
 
 
@@ -169,23 +166,21 @@ function drawMonthCharts(currentQuestion) {
     Promise.all([
         londonDataPromise,
         monthsPromise
-    ]).then(function([tribeData, months]) {
-        months.forEach(function(month) {
-            drawMonthChart(currentQuestion, tribeData, month);
-        });
+    ]).then(([tribeData, months]) => {
+        months.forEach(month => drawMonthChart(currentQuestion, tribeData, month));
     });
     $("#question-subtitle").html(`${currentQuestion}`);
 }
 
 function drawMonthChart(currentQuestion, tribeData, month){
     const valueCounter = new Map();
-    VALUE_TO_DISPLAY_NAME.forEach(function(value, key) {
-        valueCounter.set(key, 0);
-    });
+    VALUE_TO_DISPLAY_NAME.forEach(
+        (value, key) => valueCounter.set(key, 0);
+    );
 
-    tribeData.filter(function(row) {
-        return row[MONTH_FIELD] === month;
-    }).map(function(row) {
+    tribeData.filter(
+        row => (row[MONTH_FIELD] === month)
+    ).map(row => {
         const key = row[currentQuestion];
         valueCounter.set(key, valueCounter.get(key) + 1);
     });
@@ -220,30 +215,30 @@ function drawMonthChart(currentQuestion, tribeData, month){
 
 
 function drawTribeQuestionCharts(currentQuestion) {
-    questionsPromise.then(function(questions) {
-        questions.forEach(function(question) {
-            drawTribeQuestionChart(question);
-        });
-    });
+    questionsPromise.then(
+        questions => questions.forEach(
+            question => drawTribeQuestionChart(question);
+        )
+    );
 }
 
 function drawTribeQuestionChart(currentQuestion) {
     Promise.all([
         monthsPromise,
         londonDataPromise
-    ]).then(function([months, data]) {
+    ]).then(([months, data]) => {
         //Create empty map of map
         const allResponses = new Map();
-        VALUE_TO_DISPLAY_NAME.forEach(function(value) {
+        VALUE_TO_DISPLAY_NAME.forEach(value => {
             const valueResponses = new Map();
-            months.forEach(function(month) {
-                valueResponses.set(month, 0);
-            });
+            months.forEach(
+                month => valueResponses.set(month, 0)
+            );
             allResponses.set(value, valueResponses);
         });
 
         // Fill
-        data.forEach(function (row) {
+        data.forEach(row => {
             if(!(currentQuestion in row)) {
                 return;
             }
@@ -255,7 +250,7 @@ function drawTribeQuestionChart(currentQuestion) {
 
         //convert to series for highcharts
         const series = [];
-        allResponses.forEach(function (valueResponses, valueLabel) {
+        allResponses.forEach((valueResponses, valueLabel) => {
             const seriesEntry = {
                 name: valueLabel,
                 data: Array.from(valueResponses.values())
@@ -319,8 +314,8 @@ $(document).ready(function() {
         drawCharts($questionSelect.val());
     });
 
-    questionsPromise.then(function(questions) {
-        questions.forEach(function(question) {
+    questionsPromise.then(questions => {
+        questions.forEach(question => {
             $questionSelect.append(`<option value="${question}">${question}</option>`);
             $questionGraphs.append(`
                 <div class="large-4 columns">
@@ -331,8 +326,8 @@ $(document).ready(function() {
     });
 
     //Create monthly graphs container
-    monthsPromise.then(function(months) {
-        months.map(function(month) {
+    monthsPromise.then(months => {
+        months.map(month => {
             $monthlyGraphs.append(`
                 <div class="large-3 columns">
                     <div class="month-graph" data-month="${month}"></div>
