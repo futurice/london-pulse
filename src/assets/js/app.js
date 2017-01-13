@@ -216,18 +216,28 @@ function drawMonthChart(currentQuestion, tribeData, month){
 };
 
 
-function drawTribeQuestionCharts(currentQuestion) {
+function drawAllQuestionCharts(currentQuestion, tribe) {
     questionsPromise.then(
         questions => questions.forEach(
-            question => drawTribeQuestionChart(question)
+            question => drawQuestionChart(question, tribe, question)
         )
     );
 }
 
-function drawTribeQuestionChart(currentQuestion) {
+function drawTribesQuestionCharts(currentQuestion) {
+    tribesPromise.then(
+        tribes => tribes.forEach(
+            tribe => drawQuestionChart(currentQuestion, tribe)
+        )
+    );
+}
+
+function drawQuestionChart(currentQuestion, tribe, ctx) {
+    ctx = currentQuestion;
+    console.log(ctx);
     Promise.all([
         monthsPromise,
-        getTribeDataPromise(MY_TRIBE)
+        getTribeDataPromise(tribe)
     ]).then(([months, data]) => {
         //Create empty map of map
         const allResponses = new Map();
@@ -261,7 +271,7 @@ function drawTribeQuestionChart(currentQuestion) {
         });
 
         //Draw
-        $(`.question-graph[data-question="${currentQuestion}"]`).highcharts({
+        $(`.question-graph[data-question="${ctx}"]`).highcharts({
             chart: {
                 type: "column"
             },
@@ -297,7 +307,7 @@ function drawCharts(currentQuestion) {
         $("#monthly-graphs").hide();
         $(".averages-graph").hide();
         $("#question-graphs").show();
-        drawTribeQuestionCharts(currentQuestion);
+        drawAllQuestionCharts(currentQuestion, MY_TRIBE);
     } else {
         $("#question-graphs").hide();
         $("#monthly-graphs").show();
