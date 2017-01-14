@@ -2,7 +2,9 @@ $(document).foundation();
 
 const MONTH_FIELD = "Month";
 const TRIBE_FIELD = "My tribe";
-const MY_TRIBE = "London"
+const MY_TRIBE = "London";
+const ALL_QUESTIONS = "All questions";
+
 const VALUE_TO_DISPLAY_NAME = new Map ([
     ["", "Abstain"],
     [1, "Str disagree"],
@@ -79,7 +81,7 @@ const tribesPromise = dataPromise.then(data => {
         row => row[TRIBE_FIELD]
     );
     const uniqueTribes = new Set(allTribes);
-    return Array.from(allTribes).sort(function(a, b) {
+    return Array.from(uniqueTribes).sort(function(a, b) {
         if (a === MY_TRIBE) {  /* Always put MY_TRIBE first */
             return -1;
         } else if (b === MY_TRIBE){
@@ -163,63 +165,10 @@ function calculateAverage(array){
     return sum / array.length;
 }
 
-
-function drawMonthCharts(currentQuestion) {
-    Promise.all([
-        getTribeDataPromise(MY_TRIBE),
-        monthsPromise
-    ]).then(([tribeData, months]) => {
-        months.forEach(month => drawMonthChart(currentQuestion, tribeData, month));
-    });
-    $("#question-subtitle").html(`${currentQuestion}`);
-}
-
-function drawMonthChart(currentQuestion, tribeData, month){
-    const valueCounter = new Map();
-    VALUE_TO_DISPLAY_NAME.forEach(
-        (value, key) => valueCounter.set(key, 0)
-    );
-
-    tribeData.filter(
-        row => (row[MONTH_FIELD] === month)
-    ).map(row => {
-        const key = row[currentQuestion];
-        valueCounter.set(key, valueCounter.get(key) + 1);
-    });
-
-    $(`.month-graph[data-month="${month}"]`).highcharts({
-        chart: {
-            type: "column"
-        },
-        xAxis: {
-            categories: Array.from(VALUE_TO_DISPLAY_NAME.values())
-        },
-        yAxis: {
-            title: {
-                text: "# responses"
-            }
-        },
-        series: [{
-            data: Array.from(valueCounter.values())
-        }],
-        legend: {
-            enabled: false
-        },
-        title: {
-            text: null
-        },
-        subtitle: {
-            text: month,
-            x: 20
-        }
-    });
-};
-
-
 function drawAllQuestionCharts(currentQuestion, tribe) {
     questionsPromise.then(
         questions => questions.forEach(
-            question => drawQuestionChart(question, tribe, question)
+            question => drawQuestionChart(question, tribe, "question")
         )
     );
 }
@@ -227,18 +176,24 @@ function drawAllQuestionCharts(currentQuestion, tribe) {
 function drawTribesQuestionCharts(currentQuestion) {
     tribesPromise.then(
         tribes => tribes.forEach(
-            tribe => drawQuestionChart(currentQuestion, tribe)
+            tribe => drawQuestionChart(currentQuestion, tribe, "tribe")
         )
     );
 }
 
 function drawQuestionChart(currentQuestion, tribe, ctx) {
-    ctx = currentQuestion;
-    console.log(ctx);
     Promise.all([
         monthsPromise,
         getTribeDataPromise(tribe)
     ]).then(([months, data]) => {
+        let subtitle = '';
+
+        if (ctx === "question") {
+            subtitle = currentQuestion;
+        } else {
+            subtitle = tribe;
+        }
+
         //Create empty map of map
         const allResponses = new Map();
         VALUE_TO_DISPLAY_NAME.forEach(value => {
@@ -271,7 +226,7 @@ function drawQuestionChart(currentQuestion, tribe, ctx) {
         });
 
         //Draw
-        $(`.question-graph[data-question="${ctx}"]`).highcharts({
+        $(`.small-graph[data-question="${currentQuestion}"][data-tribe="${tribe}"`).highcharts({
             chart: {
                 type: "column"
             },
@@ -279,7 +234,7 @@ function drawQuestionChart(currentQuestion, tribe, ctx) {
                 text: null
             },
             subtitle: {
-                text: currentQuestion
+                text: subtitle
             },
             spacingBottom: 30,
             marginTop: 30,
@@ -303,46 +258,49 @@ function drawQuestionChart(currentQuestion, tribe, ctx) {
 }
 
 function drawCharts(currentQuestion) {
-    if(currentQuestion === "All questions") {
-        $("#monthly-graphs").hide();
+    if(currentQuestion === ALL_QUESTIONS) {
+        $("#tribe-graphs").hide();
         $(".averages-graph").hide();
         $("#question-graphs").show();
         drawAllQuestionCharts(currentQuestion, MY_TRIBE);
     } else {
         $("#question-graphs").hide();
-        $("#monthly-graphs").show();
+        $("#tribe-graphs").show();
         $(".averages-graph").show();
         drawAverageChart(currentQuestion);
-        drawMonthCharts(currentQuestion);
+        drawTribesQuestionCharts(currentQuestion);
     }
 };
 
 $(document).ready(function() {
     const $questionSelect = $("#question-select");
-    const $monthlyGraphs = $("#monthly-graphs");
+    const $tribeGraphs = $("#tribe-graphs");
     const $questionGraphs = $("#question-graphs");
 
     $questionSelect.on("change", function() {
+        $(".tribe-graph").attr("data-question", $questionSelect.val());
         drawCharts($questionSelect.val());
     });
+
+    $questionSelect.append(`<option value="${ALL_QUESTIONS}">All questions for London</option>`);
 
     questionsPromise.then(questions => {
         questions.forEach(question => {
             $questionSelect.append(`<option value="${question}">${question}</option>`);
             $questionGraphs.append(`
                 <div class="large-4 columns">
-                    <div class="question-graph" data-question="${question}"></div>
+                    <div class="question-graph small-graph" data-tribe="${MY_TRIBE}" data-question="${question}"></div>
                 </div>`);
         });
         $questionSelect.trigger("change");
     });
 
-    //Create monthly graphs container
-    monthsPromise.then(months => {
-        months.map(month => {
-            $monthlyGraphs.append(`
-                <div class="large-3 columns">
-                    <div class="month-graph" data-month="${month}"></div>
+    //Create graph container for tribe results
+    tribesPromise.then(tribes => {
+        tribes.forEach(tribe => {
+            $tribeGraphs.append(`
+                <div class="large-4 columns">
+                    <div class="tribe-graph small-graph" data-tribe="${tribe}" data-question=""></div>
                 </div>`);
         })
     });

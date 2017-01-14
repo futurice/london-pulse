@@ -5,18 +5,20 @@
     display: none;
 }
 
-#monthly-graphs {
+#tribe-graphs {
     display: none;
 }
 
-.month-graph {
-    height: 200px;
+.small-graph {
     margin: 30px 5px;
+}
+
+.tribe-graph {
+    height: 200px;
 }
 
 .question-graph {
     height: 300px;
-    margin: 30px 5px;
 }
 
 #question-graphs {
