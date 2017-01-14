@@ -8,14 +8,14 @@ A visualisation of pulse data for the London tribe only to help analyse results 
 * Responses distribution per question, per month, just because.
 
 CSV data is from https://pulse-results.app.futurice.com
+
 Note: this project uses Foundation with the ZURB Template (http://foundation.zurb.com/sites).
 
-## Roadmap / To-do
+## To-dos
 
+* Move to ChartJS or other open-source alternative to highcharts
 * Ability to select the focus tribe
-* Select year?
-* Refactor: use arrow functions
-* Genral refactoring
+* Select year
 
 
 
