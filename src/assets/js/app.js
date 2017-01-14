@@ -168,7 +168,7 @@ function calculateAverage(array){
 function drawAllQuestionCharts(currentQuestion, tribe) {
     questionsPromise.then(
         questions => questions.forEach(
-            question => drawQuestionChart(question, tribe, "question")
+            question => drawQuestionChart(question, tribe, "question", false)
         )
     );
 }
@@ -176,33 +176,36 @@ function drawAllQuestionCharts(currentQuestion, tribe) {
 function drawTribesQuestionCharts(currentQuestion) {
     tribesPromise.then(
         tribes => tribes.forEach(
-            tribe => drawQuestionChart(currentQuestion, tribe, "tribe")
+            tribe => drawQuestionChart(currentQuestion, tribe, "tribe", true)
         )
     );
 }
 
-function drawQuestionChart(currentQuestion, tribe, ctx) {
+function drawQuestionChart(currentQuestion, tribe, graphTitle, ratioCalc) {
     Promise.all([
         monthsPromise,
         getTribeDataPromise(tribe)
     ]).then(([months, data]) => {
-        let subtitle = '';
+        let subtitle = tribe;
+        let chartCeiling = 100;
+        let yAxisTitle = "% responses";
 
-        if (ctx === "question") {
+        if (graphTitle === "question") {
             subtitle = currentQuestion;
-        } else {
-            subtitle = tribe;
+            chartCeiling = null;
+            yAxisTitle = "Number of responses";
         }
 
         //Create empty map of map
         const allResponses = new Map();
-        VALUE_TO_DISPLAY_NAME.forEach(value => {
-            const valueResponses = new Map();
-            months.forEach(
-                month => valueResponses.set(month, 0)
-            );
-            allResponses.set(value, valueResponses);
-        });
+        VALUE_TO_DISPLAY_NAME.forEach(
+            value => allResponses.set(
+                value,
+                createMapFromArray(months, () => 0)
+            )
+        );
+        const monthTotals = createMapFromArray(months, () => 0);
+
 
         // Fill
         data.forEach(row => {
@@ -212,8 +215,19 @@ function drawQuestionChart(currentQuestion, tribe, ctx) {
             const monthName = row[MONTH_FIELD]
             const valueLabel = VALUE_TO_DISPLAY_NAME.get(row[currentQuestion]);
             const n = allResponses.get(valueLabel).get(monthName);
-            allResponses.get(valueLabel).set(monthName, n+1);
+            allResponses.get(valueLabel).set(monthName, n + 1);
+            monthTotals.set(monthName, monthTotals.get(monthName) + 1);
         });
+
+        // calculate % if needed
+        if (ratioCalc) {
+            allResponses.forEach((valueResponses, valueLabel) => {
+                valueResponses.forEach((monthReponses, monthName) => {
+                    const ratio = 100 * (monthReponses / monthTotals.get(monthName));
+                    valueResponses.set(monthName, ratio);
+                })
+            });
+        }
 
         //convert to series for highcharts
         const series = [];
@@ -242,7 +256,10 @@ function drawQuestionChart(currentQuestion, tribe, ctx) {
                 categories: months
             },
             yAxis: {
-                title: null
+                title: {
+                    text: yAxisTitle
+                },
+                ceiling: chartCeiling
             },
             series,
             plotOptions: {
@@ -255,6 +272,12 @@ function drawQuestionChart(currentQuestion, tribe, ctx) {
             }
         });
     });
+}
+
+function createMapFromArray(keys, valueFunc) {
+    const counter = new Map();
+    keys.forEach(key => counter.set(key, valueFunc()));
+    return counter;
 }
 
 function drawCharts(currentQuestion) {
