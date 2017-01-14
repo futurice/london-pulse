@@ -135,7 +135,8 @@ function drawAverageChart(currentQuestion) {
         allResponses.forEach( (tribeResponses, tribe) => {
             const seriesEntry = {
                 label: tribe,
-                data: Array.from(tribeResponses.values())
+                data: Array.from(tribeResponses.values()),
+                backgroundColor: chartColors[tribe]
             };
             series.push(seriesEntry);
         });
@@ -151,7 +152,18 @@ function drawAverageChart(currentQuestion) {
                 labels: months,
                 datasets: series
             },
-            maintainAspectRatio : false
+            maintainAspectRatio : false,
+            options: {
+                legend : {
+                    position : "bottom",
+                    labels : {
+                        boxWidth : 20
+                    }
+                },
+                hover : {
+                    mode : "dataset"
+                }
+            }
         });
     });
 }
@@ -311,7 +323,7 @@ $(document).ready(function() {
             $questionSelect.append(`<option value="${question}">${question}</option>`);
             $questionGraphs.append(`
                 <div class="large-4 columns">
-                    <canvas class="question-graph small-graph" data-tribe="${MY_TRIBE}" data-question="${question}"></canvas>
+                    <canvas class="question-graph small-graph" data-tribe="${MY_TRIBE}" data-question="${question}" width="360" height="300"></canvas>
                 </div>`);
         });
         $questionSelect.trigger("change");
@@ -322,7 +334,7 @@ $(document).ready(function() {
         tribes.forEach(tribe => {
             $tribeGraphs.append(`
                 <div class="large-4 columns">
-                    <div class="tribe-graph small-graph" data-tribe="${tribe}" data-question=""></div>
+                    <canvas class="tribe-graph small-graph" data-tribe="${tribe}" data-question="" width="360" height="300"></canvas>
                 </div>`);
         })
     });

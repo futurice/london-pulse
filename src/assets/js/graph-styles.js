@@ -1,11 +1,13 @@
 // Global graph styles
-
-window.chartColors = {
-    red: 'rgb(255, 99, 132)',
-    orange: 'rgb(255, 159, 64)',
-    yellow: 'rgb(255, 205, 86)',
-    green: 'rgb(75, 192, 192)',
-    blue: 'rgb(54, 162, 235)',
-    purple: 'rgb(153, 102, 255)',
-    grey: 'rgb(231,233,237)'
-};
+const chartColors = {
+    London : 'rgba(237,82,74,1)',
+    Avalon : 'rgba(175,175,175,1)',
+    Berlin : 'rgba(140,214,116,1)',
+    "Tribe Four" : "rgba(87,154,214,1)",
+    Inna : "rgba(252,168,83,1)",
+    Munich : "rgba(159,101,173,1)",
+    Tammerforce : "rgba(164,27,27,1)",
+    "South Side": "rgba(74,159,166,1)",
+    Stockholm : "rgba(244,101,8,1)",
+    Vesa : "rgba(253,237,77,1)"
+}
