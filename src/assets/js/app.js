@@ -95,6 +95,7 @@ const tribesPromise = dataPromise.then(data => {
     });
 });
 
+let averageChart = null;
 
 function drawAverageChart(currentQuestion) {
     Promise.all([
@@ -133,26 +134,24 @@ function drawAverageChart(currentQuestion) {
         const series = [];
         allResponses.forEach( (tribeResponses, tribe) => {
             const seriesEntry = {
-                name: tribe,
+                label: tribe,
                 data: Array.from(tribeResponses.values())
             };
             series.push(seriesEntry);
         });
 
-        //Draw
-        $("#average-graph-container").highcharts({
-            chart: {
-                type: "column"
+        //Draw with chartJS
+        const chartCtx = $("#average-graph-container");
+        if (averageChart) {
+            averageChart.destroy();
+        }
+        averageChart = new Chart(chartCtx, {
+            type:  'bar',
+            data: {
+                labels: months,
+                datasets: series
             },
-            title: {
-                text: "Monthly average"
-            },
-            spacingBottom: 30,
-            marginTop: 30,
-            xAxis: {
-                categories: months
-            },
-            series
+            maintainAspectRatio : false
         });
     });
 }
@@ -312,7 +311,7 @@ $(document).ready(function() {
             $questionSelect.append(`<option value="${question}">${question}</option>`);
             $questionGraphs.append(`
                 <div class="large-4 columns">
-                    <div class="question-graph small-graph" data-tribe="${MY_TRIBE}" data-question="${question}"></div>
+                    <canvas class="question-graph small-graph" data-tribe="${MY_TRIBE}" data-question="${question}"></canvas>
                 </div>`);
         });
         $questionSelect.trigger("change");

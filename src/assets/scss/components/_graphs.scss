@@ -5,12 +5,17 @@
     display: none;
 }
 
+#average-graph-container {
+    // height: 400px !important;
+}
+
 #tribe-graphs {
     display: none;
 }
 
 .small-graph {
     margin: 30px 5px;
+    width: 100%;
 }
 
 .tribe-graph {
