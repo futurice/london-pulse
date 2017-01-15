@@ -211,16 +211,6 @@ function drawQuestionChart(currentQuestion, tribe, graphTitle, ratioCalc) {
         monthsPromise,
         getTribeDataPromise(tribe)
     ]).then(([months, data]) => {
-        let subtitle = tribe;
-        let chartCeiling = 100;
-        let yAxisTitle = "% responses";
-
-        if (graphTitle === "question") {
-            subtitle = currentQuestion;
-            chartCeiling = null;
-            yAxisTitle = "Number of responses";
-        }
-
         //Create empty map of map
         const allResponses = new Map();
         VALUE_TO_DISPLAY_NAME.forEach(
@@ -254,48 +244,68 @@ function drawQuestionChart(currentQuestion, tribe, graphTitle, ratioCalc) {
             });
         }
 
-        //convert to series for highcharts
+        //convert to series
         const series = [];
         allResponses.forEach((valueResponses, valueLabel) => {
             const seriesEntry = {
-                name: valueLabel,
-                data: Array.from(valueResponses.values())
+                label: valueLabel,
+                data: Array.from(valueResponses.values()),
+                backgroundColor: chartColors[valueLabel]
             };
             series.push(seriesEntry);
         });
 
+        let chartTitle = tribe;
+        let chartCeiling = 100;
+        let yAxisTitle = "% responses";
+
+        if (graphTitle === "question") {
+            chartTitle = currentQuestion;
+            chartCeiling = 18;
+            yAxisTitle = "Number of responses";
+        }
+
         //Draw
-        $(`.small-graph[data-question="${currentQuestion}"][data-tribe="${tribe}"`).highcharts({
-            chart: {
-                type: "column"
-            },
-            title: {
-                text: null
-            },
-            subtitle: {
-                text: subtitle
-            },
-            spacingBottom: 30,
-            marginTop: 30,
-            xAxis: {
-                categories: months
-            },
-            yAxis: {
-                title: {
-                    text: yAxisTitle
+        createOrUpdateChart(
+            $(`.small-graph[data-question="${currentQuestion}"][data-tribe="${tribe}"`),{
+                type:  'bar',
+                data: {
+                    labels : months,
+                    datasets : series,
                 },
-                ceiling: chartCeiling
-            },
-            series,
-            plotOptions: {
-                column: {
-                    stacking: "normal",
+                maintainAspectRatio : false,
+                options: {
+                    title: {
+                        display : true,
+                        text : chartTitle,
+                        fontStyle : "normal",
+                        fullWidth : true,
+                        padding : 30
+                    },
+                    legend : {
+                        display : false
+                    },
+                    hover : {
+                        mode : "dataset"
+                    },
+                    scales : {
+                        xAxes: [{
+                            stacked : true
+                        }],
+                        yAxes : [{
+                            stacked : true,
+                            ticks : {
+                                max : chartCeiling
+                            },
+                            scaleLabel : {
+                                display : true,
+                                labelString : yAxisTitle
+                            }
+                        }]
+                    }
                 }
-            },
-            legend: {
-                enabled: false
             }
-        });
+        );
     });
 }
 
