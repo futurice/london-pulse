@@ -142,11 +142,7 @@ function drawAverageChart(currentQuestion) {
         });
 
         //Draw with chartJS
-        const chartCtx = $("#average-graph-container");
-        if (averageChart) {
-            averageChart.destroy();
-        }
-        averageChart = new Chart(chartCtx, {
+        createOrUpdateChart($("#average-graph-container"), {
             type:  'bar',
             data: {
                 labels: months,
@@ -173,6 +169,17 @@ function drawAverageChart(currentQuestion) {
             }
         });
     });
+}
+
+function createOrUpdateChart(chartCtx, chartSettings) {
+    const chart = chartCtx.data("chart");
+    if (chart) {
+        chart.data.datasets = chartSettings.data.datasets;
+        chart.update();
+    } else {
+        const newChart = new Chart(chartCtx, chartSettings);
+        chartCtx.data("chart", newChart);
+    }
 }
 
 function calculateAverage(array){
