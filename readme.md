@@ -13,9 +13,8 @@ Note: this project uses Foundation with the ZURB Template (http://foundation.zur
 
 ## To-dos
 
-* Move to ChartJS or other open-source alternative to highcharts
 * Ability to select the focus tribe
-* Select year
+* Select year (or something to handle it)
 
 
 
