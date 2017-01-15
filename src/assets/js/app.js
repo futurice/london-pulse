@@ -162,6 +162,13 @@ function drawAverageChart(currentQuestion) {
                 },
                 hover : {
                     mode : "dataset"
+                },
+                scales : {
+                    yAxes : [{
+                        ticks : {
+                            max : 4
+                        }
+                    }]
                 }
             }
         });
