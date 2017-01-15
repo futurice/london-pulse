@@ -160,9 +160,15 @@ function drawAverageChart(currentQuestion) {
                     mode : "dataset"
                 },
                 scales : {
+                    xAxes : [{
+                        gridLines : {
+                            display : false
+                        }
+                    }],
                     yAxes : [{
                         ticks : {
-                            max : 4
+                            max : 4,
+                            stepSize : 1
                         }
                     }]
                 }
@@ -290,12 +296,16 @@ function drawQuestionChart(currentQuestion, tribe, graphTitle, ratioCalc) {
                     },
                     scales : {
                         xAxes: [{
-                            stacked : true
+                            stacked : true,
+                            gridLines : {
+                                display : false
+                            }
                         }],
                         yAxes : [{
                             stacked : true,
                             ticks : {
-                                max : chartCeiling
+                                max : chartCeiling,
+                                maxTicksLimit : 4
                             },
                             scaleLabel : {
                                 display : true,

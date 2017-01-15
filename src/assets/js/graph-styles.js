@@ -10,9 +10,9 @@ const chartColors = {
     "South Side": "rgba(74,159,166,1)",
     "Stockholm" : "rgba(244,101,8,1)",
     "Vesa" : "rgba(253,237,77,1)",
-    "Abstain" : "rgba(175,175,175,1)",
+    "Abstain" : "rgba(175,175,175,0.7)",
     "Str disagree": "rgba(237,82,74,1)",
-    "Disagree" : "rgba(252,168,83,0.8)",
+    "Disagree" : "rgba(252,168,83,1)",
     "Agree" : "rgba(140,214,116,1)",
     "Str agree" : "rgba(74,159,166,1)"
 }
