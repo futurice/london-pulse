@@ -17,6 +17,13 @@ Note: this project uses Foundation with the ZURB Template (http://foundation.zur
 * Select year (or something to handle it)
 
 
+## Deployment
+
+Currently deployed on S3 on my personal account.
+From the ansible/ directory, run:
+
+```ansible-playbook site.yml```
+
 
 ## Installation
 

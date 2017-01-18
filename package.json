@@ -1,14 +1,14 @@
 {
-  "name": "foundation-zurb-template",
+  "name": "London Pulse results",
   "version": "1.0.0",
-  "description": "Official ZURB Template for Foundation for Sites.",
+  "description": "London Pulse results visualisation",
   "main": "gulpfile.js",
   "scripts": {
     "start": "gulp",
     "build": "gulp build --production"
   },
-  "author": "ZURB <foundation@zurb.com>",
-  "license": "MIT",
+  "author": "Marie Lu Vinh",
+  "license": "UNLICENSED",
   "devDependencies": {
     "babel-preset-es2015": "^6.3.13",
     "babel-register": "^6.7.2",
@@ -35,11 +35,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/zurb/foundation-zurb-template.git"
-  },
-  "bugs": {
-    "url": "https://github.com/zurb/foundation-sites/issues",
-    "email": "foundation@zurb.com"
+    "url": "git@bitbucket.org:emache/london-pulse.git"
   },
   "babel": {
     "presets": ["es2015"]
