@@ -1,0 +1,26 @@
+# usage: ansible-playbook site.yml
+- name: Deploy London Pulse results
+  hosts: localhost
+  connection: local
+  tasks:
+    - name: Build for production
+      command: npm run build
+
+    - name: cloudformation stack
+      cloudformation:
+        state: present
+        stack_name: london-pulse-results
+        region: eu-west-1
+        template: files/site_cloudformation.yml
+      tags: [cloudformation]
+      register: cf_result
+
+    - name: upload
+      command: >
+        aws s3 sync
+        ../dist
+        s3://{{ cf_result.stack_outputs.S3Bucket }}/
+
+    - name: debug
+      debug:
+        msg: Site is up at {{ cf_result.stack_outputs.WebsiteURL }}

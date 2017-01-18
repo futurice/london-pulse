@@ -1,0 +1,40 @@
+AWSTemplateFormatVersion: '2010-09-09'
+
+Description: London Pulse results
+
+Resources:
+
+  S3Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      LifecycleConfiguration:
+        # Delete old versions of files after 30 days
+        Rules:
+          - Status: Enabled
+            NoncurrentVersionExpirationInDays: 30
+      VersioningConfiguration:
+        Status: Enabled
+      WebsiteConfiguration:
+        ErrorDocument: index.html  # ember responds to everything
+        IndexDocument: index.html
+
+  S3BucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref S3Bucket
+      PolicyDocument:
+        Version: '2008-10-17'
+        Statement:
+          - Effect: Allow
+            Principal: '*'
+            Action:
+              - 's3:GetObject'
+            Resource: !Sub arn:aws:s3:::${S3Bucket}/*
+
+Outputs:
+
+  S3Bucket:
+    Value: !Ref S3Bucket
+
+  WebsiteURL:
+    Value: !Sub https://${S3Bucket}.s3-website-${AWS::Region}.amazonaws.com
