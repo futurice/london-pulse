@@ -31,10 +31,39 @@ Resources:
               - 's3:GetObject'
             Resource: !Sub arn:aws:s3:::${S3Bucket}/*
 
+  CloudfrontDistribution:
+    Type: AWS::CloudFront::Distribution
+    Properties:
+      DistributionConfig:
+        Comment: London Pulse results
+        DefaultCacheBehavior:
+          AllowedMethods: [HEAD, GET]
+          Compress: true
+          DefaultTTL: 60
+          ForwardedValues:
+            QueryString: false
+          MaxTTL: 31536000
+          MinTTL: 0
+          TargetOriginId: S3Bucket
+          ViewerProtocolPolicy: redirect-to-https
+        DefaultRootObject: index.html
+        Enabled: true
+        HttpVersion: http2
+        Origins:
+        - Id: S3Bucket
+          DomainName: !Sub ${S3Bucket}.s3-website-${AWS::Region}.amazonaws.com
+          CustomOriginConfig:
+            HTTPPort: 80
+            HTTPSPort: 443
+            OriginProtocolPolicy: http-only
+            OriginSSLProtocols: [TLSv1, TLSv1.1, TLSv1.2]
+        PriceClass: PriceClass_100
+
 Outputs:
 
   S3Bucket:
     Value: !Ref S3Bucket
 
   WebsiteURL:
-    Value: !Sub https://${S3Bucket}.s3-website-${AWS::Region}.amazonaws.com
+    Value: !Sub https://${CloudfrontDistribution.DomainName}
+
