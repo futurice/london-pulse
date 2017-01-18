@@ -6,7 +6,7 @@ const MY_TRIBE = "London";
 const ALL_QUESTIONS = "All questions";
 
 const VALUE_TO_DISPLAY_NAME = new Map ([
-    ["", "Abstain"],
+    ["", "Can't say/ abstain"],
     [1, "Str disagree"],
     [2, "Disagree"],
     [3, "Agree"],
