@@ -1,5 +1,5 @@
 {
-  "name": "London Pulse results",
+  "name": "london-pulse-results",
   "version": "1.0.0",
   "description": "London Pulse results visualisation",
   "main": "gulpfile.js",
