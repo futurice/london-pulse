@@ -15,12 +15,13 @@ Note: this project uses Foundation with the ZURB Template (http://foundation.zur
 
 * Ability to select the focus tribe
 * Select year (or something to handle it)
+* "Analyse" page giving some info for the selected tribe (e.g. Question where selected tribe ranks higher than other tribes;=, improved from last month,...)
 
 
 ## Deployment
 
 Currently deployed on S3 on my personal account.
-From the ansible/ directory, run:
+From the `ansible/` directory, run:
 
 ```ansible-playbook site.yml```
 
